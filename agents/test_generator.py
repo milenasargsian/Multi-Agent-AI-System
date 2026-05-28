@@ -6,15 +6,16 @@ from agents.base import BaseAgent
 
 class TestGeneratorAgent(BaseAgent):
     """
-    Responsibility: Write a complete, runnable test suite for the submitted code.
-    Uses all prior agents' outputs to ensure:
-      - Normal behavior is tested.
-      - Every critical/warning bug found has a regression test.
-      - Edge cases inferred from the code structure are covered.
+        Responsibility: Write a complete, runnable test suite for the submitted code.
+        Uses all prior agents' outputs to ensure:
+          - Normal behavior is tested.
+          - Every critical/warning bug found has a regression test.
+          - Edge cases inferred from the code structure are covered.
 
-    Produces a self-contained test file and coverage summary.
+        Produces a self-contained test file and coverage summary.
     """
     NAME = "Test Generator"
+
 
     @property
     def system_prompt(self) -> str:
@@ -30,7 +31,7 @@ You receive:
 Your ONLY responsibility: write a complete, runnable unit test suite for the code.
 Each critical and warning bug must have at least one regression test.
 
-Return EXACTLY this JSON schema — no preamble, no markdown fences:
+Return EXACTLY this JSON schema - no preamble, no markdown fences:
 {
   "framework": "<test framework, e.g. pytest, unittest, Jest>",
   "tests": "<full test file content as a single string — use actual newlines>",

@@ -1,15 +1,13 @@
-"""Agent 1: Intent Parser — understands what the code is supposed to do."""
+"""Agent 1: Intent Parser - understands what the code is supposed to do."""
 
 from agents.base import BaseAgent
 
 
 class IntentParserAgent(BaseAgent):
     """
-    Responsibility: Analyze the raw source code and produce a structured
-    description of its purpose, language, functions, design patterns,
-    and complexity level.
-
-    Output feeds into ALL subsequent agents as context.
+        Responsibility: Analyze the raw source code and produce a structured
+        description/metadata of its purpose, language, functions, design patterns,
+        and complexity level.
     """
     NAME = "Intent Parser"
 

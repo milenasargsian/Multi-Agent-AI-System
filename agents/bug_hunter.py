@@ -1,4 +1,4 @@
-"""Agent 2: Bug Hunter — finds logic errors, edge cases, security vulnerabilities."""
+"""Agent 2: Bug Hunter - finds logic errors, edge cases, security vulnerabilities."""
 
 import json
 from agents.base import BaseAgent
@@ -6,11 +6,9 @@ from agents.base import BaseAgent
 
 class BugHunterAgent(BaseAgent):
     """
-    Responsibility: Identify bugs, security issues, and edge-case failures
-    in the code. Uses the Intent Parser's output to understand expected
-    behavior before judging correctness.
-
-    Produces a severity-ranked list of findings.
+        Responsibility: Identify bugs, security issues, and edge-case failures
+        in the code. Uses the first agent's output to understand expected
+        behavior before judging correctness.
     """
     NAME = "Bug Hunter"
 
@@ -27,7 +25,7 @@ You receive:
 Your ONLY responsibility: find bugs, security vulnerabilities, logic errors,
 and dangerous edge cases. Rank findings by severity.
 
-Return EXACTLY this JSON schema — no preamble, no markdown fences:
+Return EXACTLY this JSON schema - no preamble, no markdown fences:
 {
   "summary": "<one sentence overall assessment>",
   "critical": [
@@ -42,9 +40,9 @@ Return EXACTLY this JSON schema — no preamble, no markdown fences:
 }
 
 Severity guide:
-  critical — causes crashes, data loss, security holes (injection, XSS, unhandled exceptions)
-  warnings — incorrect logic, off-by-one, missing null checks, resource leaks
-  info     — minor code smells, missing docstrings, deprecated usage
+  critical - causes crashes, data loss, security holes (injection, unhandled exceptions)
+  warnings - incorrect logic, off-by-one, missing null checks, resource leaks
+  info     - minor code smells, missing docstrings, deprecated usage
 
 Rules:
 - Respond ONLY with valid JSON.

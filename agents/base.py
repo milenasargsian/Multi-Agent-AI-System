@@ -11,7 +11,9 @@ load_dotenv()
 
 @dataclass
 class AgentTrace:
-    """Structured trace of a single agent's execution."""
+    """
+        Single agent's execution structure
+    """
     agent_name: str
     system_prompt: str
     user_prompt: str
@@ -23,8 +25,8 @@ class AgentTrace:
 
 class BaseAgent:
     """
-    Base class every agent inherits from.
-    Handles: API call, JSON parsing, timing, and trace recording.
+        Parent class every agent inherits from.
+        Handles: API call, JSON parsing, timing, and trace recording.
     """
     NAME: str = "Base Agent"
     MODEL: str = "gpt-4o-mini"
@@ -74,7 +76,7 @@ class BaseAgent:
 
     def run(self, **kwargs) -> dict:
         """
-        Execute the agent: call the API, parse, record trace.
+            Execute the agent: call the API, parse, record trace.
         """
         user_prompt = self.build_user_prompt(**kwargs)
 

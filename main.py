@@ -1,9 +1,9 @@
 """
-Multi-Agent Code Review Pipeline
-Usage:
-    python main.py                          # interactive prompt
-    python main.py --file path/to/code.py   # review a file
-    python main.py --demo                   # run with built-in sample
+    Multi-Agent Code Review Pipeline
+    Usage:
+        python main.py                          # interactive prompt
+        python main.py --file path/to/code.py   # review a file
+        python main.py --demo                   # run with built-in sample
 """
 
 import argparse
@@ -16,7 +16,7 @@ from ui import UI
 
 SAMPLE_CODE = '''\
 def fetch_user_data(user_id):
-    url = "https://api.example.com/users/" + user_id
+    url = "https://api.example.com/users/" + user_id # (do corresponding changes here)
     import requests
     response = requests.get(url)
     data = response.json()
@@ -44,22 +44,24 @@ def find_user(users, name):
 def get_code(args) -> str:
     if args.demo:
         return SAMPLE_CODE
+
     if args.file:
         path = Path(args.file)
         if not path.exists():
             UI.error(f"File not found: {args.file}")
             sys.exit(1)
         return path.read_text()
-    # interactive
+
     UI.banner()
-    UI.print("\n[bold]Paste your code below.[/bold] When done, enter a line with only [cyan]END[/cyan] and press Enter.\n")
+    UI.print("\n[bold]Paste your code below.[/bold] When done, enter a line "
+             "with only [cyan]End[/cyan] and press Enter.\n")
     lines = []
     while True:
         try:
             line = input()
         except EOFError:
             break
-        if line.strip() == "END":
+        if line.strip().upper() == "END":
             break
         lines.append(line)
     code = "\n".join(lines).strip()
