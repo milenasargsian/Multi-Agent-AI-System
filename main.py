@@ -52,7 +52,6 @@ def get_code(args) -> str:
             sys.exit(1)
         return path.read_text()
 
-    UI.banner()
     UI.print("\n[bold]Paste your code below.[/bold] When done, enter a line "
              "with only [cyan]End[/cyan] and press Enter.\n")
     lines = []

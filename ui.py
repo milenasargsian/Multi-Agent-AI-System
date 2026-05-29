@@ -17,19 +17,22 @@ class UI:
         "Intent Parser":    ("bright_blue",   "🔍"),
         "Bug Hunter":       ("bright_red",    "🐛"),
         "Refactor Advisor": ("bright_yellow", "⚡"),
-        "Test Generator":   ("bright_green",  "✅"),
+        "Code Fixer":       ("bright_magenta", "🔧"),
+        "Test Generator":   ("bright_green",  "✅")
     }
+
 
     @staticmethod
     def banner():
         console.print()
         console.print(Panel.fit(
             "[bold white]Multi-Agent Code Review Pipeline[/bold white]\n"
-            "[dim]Intent Parser → Bug Hunter → Refactor Advisor → Test Generator[/dim]",
+            "[dim]Intent Parser → Bug Hunter → Refactor Advisor → Code Fixer → Test Generator[/dim]",
             border_style="bright_blue",
             padding=(1, 4),
         ))
         console.print()
+
 
     @staticmethod
     def print(*args, **kwargs):
@@ -160,6 +163,29 @@ class UI:
 
 
     @staticmethod
+    def show_fixed_code(fixed: dict):
+
+        summary = fixed.get("summary", "")
+        code = fixed.get("fixed_code", "")
+
+        console.print(summary)
+
+        if code:
+            console.print("\n[bold green]Fixed Code[/bold green]\n")
+            console.print(code)
+
+        changes = fixed.get("changes", [])
+
+        if changes:
+            console.print("\n[bold]Applied Changes[/bold]\n")
+
+            for item in changes:
+                console.print(
+                    f"• {item.get('description', '')}"
+                )
+
+
+    @staticmethod
     def show_final_report(report: dict, log_path: str):
         console.print()
         console.print(Rule("[bold white]FINAL STRUCTURED REPORT[/bold white]", style="white"))
@@ -172,14 +198,15 @@ class UI:
         critical = report.get("critical_bugs", 0)
         warnings = report.get("warnings", 0)
 
-        table.add_row("Language", report.get("language", "—"))
-        table.add_row("Complexity", report.get("complexity", "—"))
+        table.add_row("Language", report.get("language", "-"))
+        table.add_row("Complexity", report.get("complexity", "-"))
         table.add_row("Critical bugs", f"[bold red]{critical}[/bold red]" if critical else "[green]0[/green]")
         table.add_row("Warnings", f"[yellow]{warnings}[/yellow]" if warnings else "[green]0[/green]")
         table.add_row("Info notes", str(report.get("info_notes", 0)))
         table.add_row("Quality before", f"{report.get('quality_before', '?')}/10")
         table.add_row("Quality after", f"[bold green]{report.get('quality_after', '?')}/10[/bold green]")
-        table.add_row("Test framework", report.get("test_framework", "—"))
+        table.add_row("Code fixed", "Yes" if report.get("code_fixed") else "No")
+        table.add_row("Test framework", report.get("test_framework", "-"))
         table.add_row("Test scenarios", str(report.get("test_scenarios", 0)))
 
         console.print(table)

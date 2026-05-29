@@ -1,5 +1,5 @@
 """
-    Pipeline orchestrator - runs all 4 agents in sequence,
+    Pipeline orchestrator - runs all 5 agents in sequence,
     collects traces, writes the run log, and prints results.
 """
 
@@ -11,6 +11,7 @@ from agents import (
     IntentParserAgent,
     BugHunterAgent,
     RefactorAdvisorAgent,
+    CodeFixingAgent,
     TestGeneratorAgent
 )
 from ui import UI
@@ -21,7 +22,7 @@ RUNS_DIR = Path(__file__).parent / "runs"
 
 class CodeReviewPipeline:
     """
-        Orchestrates the 4 agent code review pipeline.
+        Orchestrates the 5 agent code review pipeline.
     """
 
     def run(self, code: str) -> dict:
@@ -59,17 +60,26 @@ class CodeReviewPipeline:
         UI.show_refactor(refactor)
         UI.agent_done("Refactor Advisor")
 
-        # Agent 4: Test Generator
-        UI.agent_start("Test Generator", 4)
-        agent4 = TestGeneratorAgent()
-        tests = agent4.run(code=code, intent=intent, bugs=bugs, refactor=refactor)
-        results["tests"] = tests
+        # Agent 4: Code Fixer
+        UI.agent_start("Code Fixer", 4)
+        agent4 = CodeFixingAgent()
+        fixed = agent4.run(code=code, intent=intent, bugs=bugs, refactor=refactor)
+        results["fixed"] = fixed
         traces.append(self._trace_dict(agent4.trace))
+        UI.show_fixed_code(fixed)
+        UI.agent_done("Code Fixer")
+
+        # Agent 5: Test Generator
+        UI.agent_start("Test Generator", 5)
+        agent5 = TestGeneratorAgent()
+        tests = agent5.run(code=fixed.get("fixed_code", code), intent=intent, bugs=bugs, refactor=refactor)
+        results["tests"] = tests
+        traces.append(self._trace_dict(agent5.trace))
         UI.show_tests(tests)
         UI.agent_done("Test Generator")
 
         # Final report
-        final = self._build_final_report(intent, bugs, refactor, tests)
+        final = self._build_final_report(intent, bugs, refactor, fixed, tests)
         log_path = self._save_run_log(run_id, code, traces, final)
         UI.show_final_report(final, log_path)
 
@@ -93,7 +103,7 @@ class CodeReviewPipeline:
 
 
     @staticmethod
-    def _build_final_report(intent: dict, bugs: dict, refactor: dict, tests: dict) -> dict:
+    def _build_final_report(intent: dict, bugs: dict, refactor: dict, fixed: dict, tests: dict) -> dict:
         return {
             "language": intent.get("language", "-"),
             "complexity": intent.get("complexity", "-"),
@@ -103,6 +113,8 @@ class CodeReviewPipeline:
             "info_notes": len(bugs.get("info", [])),
             "quality_before": refactor.get("score", {}).get("before"),
             "quality_after": refactor.get("score", {}).get("after"),
+            "code_fixed": bool(fixed.get("fixed_code")),
+            "changes_made": len(fixed.get("changes", [])),
             "test_framework": tests.get("framework", "-"),
             "test_scenarios": len(tests.get("coverage", []))
         }

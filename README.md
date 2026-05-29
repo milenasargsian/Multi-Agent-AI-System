@@ -1,14 +1,9 @@
 # Multi-Agent Code Review Pipeline
 
-## Selected Domain
-
-Artificial Intelligence / Software Engineering / Automated Code Analysis
-
----
 
 ## Project Goal
 
-The goal of this project is to design and implement a fully functional multi-agent artificial intelligence system capable of analyzing source code automatically.
+The goal is to design and implement a fully functional multi-agent artificial intelligence system capable of analyzing source code automatically.
 
 The system accepts user-provided code at runtime and processes it through multiple specialized AI agents. Each agent performs a distinct task such as understanding the code, detecting bugs, suggesting improvements, and generating tests.
 
@@ -31,11 +26,12 @@ code_review_pipeline/
 ├── requirements.txt
 ├── agents/
 │   ├── __init__.py
-│   ├── base.py          # BaseAgent (API call, JSON parse, trace recording)
-│   ├── intent_parser.py # Agent 1
-│   ├── bug_hunter.py    # Agent 2
+│   ├── base.py              # BaseAgent (API call, JSON parse, trace recording)
+│   ├── intent_parser.py     # Agent 1
+│   ├── bug_hunter.py        # Agent 2
 │   ├── refactor_advisor.py  # Agent 3
-│   └── test_generator.py    # Agent 4
+│   ├── code_fixer.py        # Agent 4
+│   └── test_generator.py    # Agent 5
 └── runs/                # Auto-created, one JSON per run
 ```
 
@@ -67,9 +63,15 @@ User Input (code)
 │  Advisor        │  
 └────────┬────────┘
          │ refactor JSON
+          ▼
+┌─────────────────┐
+│  Agent 4        │  Produces corrected code applying all bug fixes
+│  Code Fixer     │  and refactoring suggestions
+└────────┬────────┘
+         │ fixed JSON
          ▼
 ┌─────────────────┐
-│  Agent 4        │  Writes a complete runnable test suite
+│  Agent 5        │  Writes a complete runnable test suite
 │  Test Generator │  Regression tests for every bug found
 └────────┬────────┘
          │
@@ -127,11 +129,27 @@ Suggests improvements for readability, maintainability, and style.
 
 ---
 
-## 4. Test Generator Agent
+## 4. Code Fixer Agent
 
 ### Role
 
-Automatically generates test cases for the input code.
+Produces a corrected version of the code based on all prior agents' findings.
+
+### Responsibilities
+
+* Apply bug fixes identified by the Bug Hunter
+* Incorporate refactoring suggestions from the Refactor Advisor
+* Return complete, corrected source code
+* Document each change with type, description, and reason
+* List any remaining limitations
+
+---
+
+## 5. Test Generator Agent
+
+### Role
+
+Automatically generates test cases for the fixed code.
 
 ### Responsibilities
 
@@ -199,6 +217,7 @@ The system generates:
 * intent analysis,
 * bug reports,
 * refactoring suggestions,
+* fixed code with change log,
 * generated tests,
 * structured final report.
 
@@ -244,6 +263,7 @@ The pipeline returns:
 * identified bugs,
 * quality scores,
 * readability improvements,
+* corrected code with change log,
 * generated unit tests,
 * testing framework suggestions,
 * final summarized report.
@@ -274,7 +294,7 @@ The pipeline returns:
 
 * Add security audit agent
 * Add performance optimization agent
-* Add code-fixing agent
+* Add quality checking agent
 * Add memory between agents
 * Add confidence scoring
 
